@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -52,15 +55,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_btn_play:
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
                 mediaPlayer.prepareAsync();
                 break;
             case R.id.activity_main_btn_stop:
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
                 break;
             case R.id.activity_main_btn_play_sound:
+                Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                MediaPlayer mediaPlayerSound = new MediaPlayer();
+                mediaPlayerSound.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+                try {
+                    mediaPlayerSound.setDataSource(this, ringtoneUri);
+                    mediaPlayerSound.setOnPreparedListener(this);
+                    mediaPlayerSound.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.activity_main_btn_play_in_service:
                 break;
-                default:
+            default:
         }
 
     }
